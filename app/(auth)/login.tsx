@@ -135,6 +135,7 @@ const LoginScreen = () => {
 					>
 						<View>
 							<Text>login</Text>
+							<PrimaryButton label="login" onPress={handleLogin} />
 						</View>
 					</SafeAreaView>
 				</KeyboardAvoidingView>
