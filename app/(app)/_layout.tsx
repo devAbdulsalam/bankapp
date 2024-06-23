@@ -55,6 +55,13 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
+				name="profile"
+				options={{
+					href: null,
+					title: 'Notifications',
+				}}
+			/>
+			<Tabs.Screen
 				name="notifications"
 				options={{
 					href: null,

@@ -142,5 +142,4 @@ const Svg01 = (props: SvgProps) => (
 		/>
 	</Svg>
 );
-
 export default Svg01;

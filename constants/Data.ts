@@ -1,14 +1,21 @@
-export const onboardingData = [
+import images from '@/constants/Images';
+export const onBoardingData = [
 	{
+		id: 1,
+		image: images.treasure,
 		title: 'Welcome to User Savings App',
 		discription: 'Easily manage your savings and spending in one place.',
 	},
 	{
+		id: 2,
+		image: images.financial,
 		title: 'Track Your Spending',
 		discription:
 			'Add your spending and automatically save a percentage of the amount.',
 	},
 	{
+		id: 3,
+		image: images.savings,
 		title: 'Monitor Your Savings',
 		discription:
 			'Keep track of your total savings and transaction history effortlessly.',

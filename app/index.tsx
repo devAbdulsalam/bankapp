@@ -1,53 +1,88 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { router } from 'expo-router';
+import { StyleSheet, FlatList, View, Animated } from 'react-native';
+import React, { useRef, useState } from 'react';
+import OnBoardingItem from '@/components/onboarding/OnBoardingSlide';
+import { onBoardingData } from '@/constants/Data';
+import Paginator from '@/components/onboarding/Paginator';
+import NavigationButtons from '@/components/onboarding/Buttons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loader from '@/components/Loader';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@react-navigation/native';
-import PrimaryButton from '@/components/PrimaryButton';
+import { router } from 'expo-router';
 
-const index = () => {
-	const [isLoading, setIsLoading] = useState(false);
+const Onboarding = () => {
+	const [currentIndex, setCurrentIndex] = useState(0);
+	const [slides, setSlides] = useState(onBoardingData);
+	const scrollX = useRef(new Animated.Value(0)).current;
+	const slidesRef = useRef(null);
 
-	const theme = useTheme();
-	const checkOnboarding = async () => {
-		try {
-			setIsLoading(true);
-			const value = await AsyncStorage.getItem('isOnboarded');
-			if (value !== null) {
-				router.replace('/(auth)/login');
-			}
-		} catch (e) {
-			console.log('Error @checkOnbaording', e);
-		} finally {
-			setIsLoading(false);
+	const viewableItemsChange = useRef(({ viewableItems }: any) => {
+		setCurrentIndex(viewableItems[0].index);
+	}).current;
+
+	const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+	const scrollBack = () => {
+		if (currentIndex > 0) {
+			slidesRef.current.scrollToIndex({ index: currentIndex - 1 });
 		}
 	};
-
-	useEffect(() => {
-		checkOnboarding();
-	}, []);
+	const skipSlides = () => {
+		const lastSlide = slides.length - 1;
+		slidesRef.current.scrollToIndex({
+			index: lastSlide,
+		});
+	};
+	const scrollForward = async () => {
+		if (currentIndex < slides.length - 1) {
+			slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
+		} else {
+			try {
+				await AsyncStorage.setItem('isAppFirstLaunched', 'true');
+				router.replace('/home');
+			} catch (error) {
+				console.log('Error @ set isOnbaording', error);
+			}
+		}
+	};
 	return (
-		<>
-			{isLoading ? (
-				<Loader />
-			) : (
-				<SafeAreaView style={{ backgroundColor: theme.colors.card, flex: 1 }}>
-					<View>
-						<Text>index</Text>
-						<PrimaryButton
-							label="Get started"
-							onPress={() => router.replace('/(app)/')}
-						/>
-					</View>
-				</SafeAreaView>
-			)}
-		</>
+		<View style={styles.container}>
+			<View style={{ flex: 3 }}>
+				<FlatList
+					data={onBoardingData}
+					keyExtractor={(item) => `${item.id}`}
+					renderItem={({ item }) => <OnBoardingItem item={item} />}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					pagingEnabled
+					bounces={false}
+					onScroll={Animated.event(
+						[{ nativeEvent: { contentOffset: { x: scrollX } } }],
+						{
+							useNativeDriver: false,
+						}
+					)}
+					scrollEventThrottle={32}
+					viewabilityConfig={viewConfig}
+					onViewableItemsChanged={viewableItemsChange}
+					ref={slidesRef}
+				/>
+			</View>
+			<Paginator data={onBoardingData} scollX={scrollX} />
+			<NavigationButtons
+				scrollForward={scrollForward}
+				scrollBack={scrollBack}
+				skipSlides={skipSlides}
+				currentIndex={currentIndex}
+			/>
+		</View>
 	);
 };
 
-export default index;
+export default Onboarding;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingBottom: 20,
+		backgroundColor: 'white',
+	},
+});

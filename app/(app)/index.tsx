@@ -10,13 +10,16 @@ import {
 	StatusBar,
 	FlatList,
 	ScrollView,
+	useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Link } from 'expo-router';
 import Transaction from '@/components/Transaction';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
 	const theme = useTheme();
+	const { width } = useWindowDimensions();
 	const renderItem = ({ item }: any) => {
 		return (
 			<View key={item.id} style={styles.serviceItem}>
@@ -43,8 +46,13 @@ export default function HomeScreen() {
 	};
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.headerContainer}>
+		<SafeAreaView style={styles.container}>
+			<View
+				style={{
+					...styles.headerContainer,
+					backgroundColor: theme.colors.primary,
+				}}
+			>
 				<View style={styles.header}>
 					<Image
 						source={require('@/assets/images/icon.png')}
@@ -54,37 +62,30 @@ export default function HomeScreen() {
 						<FontAwesome name="bell-o" size={24} color="black" />
 					</Link>
 				</View>
-				<View
-					style={{
-						...styles.balanceContainer,
-						backgroundColor: theme.colors.primary,
-					}}
-				>
-					<FlatList
-						data={accounts}
-						contentContainerStyle={{ paddingHorizontal: 10 }}
-						horizontal
-						showsHorizontalScrollIndicator={false}
-						keyExtractor={(item) => `${item.id}`}
-						pagingEnabled
-						bounces={false}
-						scrollEventThrottle={32}
-						renderItem={({ item }) => (
-							<View key={item.id} style={styles.balanceCard}>
-								<Text style={styles.balanceText}>
-									Total Balance:
-									<Text style={styles.balanceAmount}> ${item.balance}</Text>
-								</Text>
+				<FlatList
+					data={accounts}
+					contentContainerStyle={{ paddingHorizontal: 10, marginVertical: 20 }}
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					keyExtractor={(item) => `${item.id}`}
+					pagingEnabled
+					bounces={false}
+					scrollEventThrottle={16}
+					renderItem={({ item }) => (
+						<View key={item.id} style={[styles.balanceCard]}>
+							<Text style={styles.balanceText}>
+								Total Balance:
+								<Text style={styles.balanceAmount}> ${item.balance}</Text>
+							</Text>
+							<View>
 								<View>
-									<View>
-										<Text style={styles.AccountText}>{item.name} account</Text>
-										<Text style={styles.AccountText}>A/c no {item.number}</Text>
-									</View>
+									<Text style={styles.AccountText}>{item.name} account</Text>
+									<Text style={styles.AccountText}>A/c no {item.number}</Text>
 								</View>
 							</View>
-						)}
-					/>
-				</View>
+						</View>
+					)}
+				/>
 			</View>
 			<View
 				style={{ ...styles.section, backgroundColor: theme.colors.background }}
@@ -115,24 +116,27 @@ export default function HomeScreen() {
 					renderItem={({ item }) => <Transaction item={item} />}
 				/>
 			</View>
-		</View>
+		</SafeAreaView>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: StatusBar.currentHeight,
+		// backgroundColor: 'red',
+		// paddingTop: StatusBar.currentHeight,
 	},
 	headerContainer: {
-		width: '100%',
 		paddingHorizontal: 16,
 		paddingVertical: 16,
+		borderBottomLeftRadius: 30,
+		borderBottomRightRadius: 30,
 	},
 	header: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
+		// paddingTop: StatusBar.currentHeight,
 	},
 	headerImage: {
 		height: 24,
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
 	},
 	balanceCard: {
 		// flex: 1,
-		width: '100%',
+		// width: '100%',
 		gap: 4,
 		borderColor: 'white',
 		borderWidth: 1,

@@ -41,6 +41,11 @@ const notifications = () => {
 						</Text>
 					</View>
 				)}
+				ListEmptyComponent={() => (
+					<View>
+						<Text>No  Notification</Text>
+					</View>
+				)}
 			/>
 			{/* </View> */}
 		</SafeAreaView>

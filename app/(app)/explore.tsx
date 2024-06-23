@@ -13,4 +13,8 @@ const explore = () => {
 
 export default explore;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	container: {
+		backgroundColor: 'ghostwhite'
+	}
+});
