@@ -1,5 +1,5 @@
 import { StyleSheet, FlatList, View, Animated } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import OnBoardingItem from '@/components/onboarding/OnBoardingSlide';
 import { onBoardingData } from '@/constants/Data';
 import Paginator from '@/components/onboarding/Paginator';
@@ -10,8 +10,24 @@ import { router } from 'expo-router';
 const Onboarding = () => {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [slides, setSlides] = useState(onBoardingData);
+	
+	const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(false);
 	const scrollX = useRef(new Animated.Value(0)).current;
 	const slidesRef = useRef(null);
+
+
+	useEffect(() => {
+		const fetchSession = async () => {
+			const isOnboarded = await AsyncStorage.getItem('isAppFirstLaunched');
+			if (isOnboarded == null || isOnboarded === 'false') {
+				setIsAppFirstLaunched(false);
+			} else {
+				setIsAppFirstLaunched(true);
+				// AsyncStorage.removeItem('isAppFirstLaunched');
+			}
+		};
+		fetchSession();
+	}, []);
 
 	const viewableItemsChange = useRef(({ viewableItems }: any) => {
 		setCurrentIndex(viewableItems[0].index);

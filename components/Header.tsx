@@ -5,9 +5,10 @@ import { router } from 'expo-router';
 
 type headerProps = {
 	title: string;
+	onPress: () => void;
 };
 
-const Header = ({ title }: headerProps) => {
+const Header = ({ title, onPress = () => router.back() }: headerProps) => {
 	return (
 		<View
 			style={{
@@ -19,7 +20,7 @@ const Header = ({ title }: headerProps) => {
 				backgroundColor: 'white',
 			}}
 		>
-			<Pressable onPress={() => router.back()} style={styles.Icon}>
+			<Pressable onPress={onPress} style={styles.Icon}>
 				<FontAwesome6 name="arrow-left-long" size={20} color="black" />
 			</Pressable>
 			<Text style={styles.Title}>{title}</Text>

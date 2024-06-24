@@ -13,10 +13,11 @@ import Header from '@/components/Header';
 
 const notifications = () => {
 	return (
-		<SafeAreaView>
+		<SafeAreaView style={{ flex: 1 }}>
+			<Header title="Notifications" />
 			{/* <View style={styles.container}> */}
 			<FlatList
-				ListHeaderComponent={<Header title="Notifications" />}
+				// ListHeaderComponent={}
 				data={transactions}
 				renderItem={({ item }) => (
 					<View style={styles.card}>
@@ -43,7 +44,7 @@ const notifications = () => {
 				)}
 				ListEmptyComponent={() => (
 					<View>
-						<Text>No  Notification</Text>
+						<Text>No Notification</Text>
 					</View>
 				)}
 			/>
@@ -69,6 +70,13 @@ const styles = StyleSheet.create({
 		shadowColor: 'white',
 		marginVertical: 5,
 		padding: 10,
+		elevation: 5,
+		shadowOpacity: 0.8,
+		shadowRadius: 10,
+		shadowOffset: {
+			width: 0,
+			height: 20,
+		},
 	},
 	Title: {
 		fontSize: 20,

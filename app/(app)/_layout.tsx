@@ -42,6 +42,16 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+
+			<Tabs.Screen
+				name="finance"
+				options={{
+					title: 'Finance',
+					tabBarIcon: ({ color, focused }) => (
+						<TabBarIcon name={focused ? 'cash' : 'cash'} color={color} />
+					),
+				}}
+			/>
 			<Tabs.Screen
 				name="account"
 				options={{
@@ -52,13 +62,6 @@ export default function TabLayout() {
 							color={color}
 						/>
 					),
-				}}
-			/>
-			<Tabs.Screen
-				name="profile"
-				options={{
-					href: null,
-					title: 'Notifications',
 				}}
 			/>
 			<Tabs.Screen

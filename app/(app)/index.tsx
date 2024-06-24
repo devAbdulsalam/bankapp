@@ -10,15 +10,19 @@ import {
 	StatusBar,
 	FlatList,
 	ScrollView,
+	Pressable,
 	useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import Transaction from '@/components/Transaction';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '@/context/authContext';
 
 export default function HomeScreen() {
 	const theme = useTheme();
+
+	const { profile, token } = useAuth();
 	const { width } = useWindowDimensions();
 	const renderItem = ({ item }: any) => {
 		return (
@@ -47,71 +51,110 @@ export default function HomeScreen() {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<View
-				style={{
-					...styles.headerContainer,
-					backgroundColor: theme.colors.primary,
-				}}
-			>
-				<View style={styles.header}>
+			<View style={styles.header}>
+				<Pressable
+					onPress={() => router.navigate('/account')}
+					style={{
+						padding: 10,
+					}}
+				>
 					<Image
-						source={require('@/assets/images/icon.png')}
-						style={styles.headerImage}
+						source={{
+							uri:
+								profile?.avatar?.url ||
+								`https://ui-avatars.com/api/?name=${profile?.firstName}`,
+						}}
+						style={{
+							height: 48,
+							width: 48,
+							borderRadius: 24,
+							borderWidth: 1,
+							// borderColor: COLORS.secondary,
+						}}
 					/>
-					<Link href="/notifications">
-						<FontAwesome name="bell-o" size={24} color="black" />
-					</Link>
-				</View>
-				<FlatList
-					data={accounts}
-					contentContainerStyle={{ paddingHorizontal: 10, marginVertical: 20 }}
-					horizontal
-					showsHorizontalScrollIndicator={false}
-					keyExtractor={(item) => `${item.id}`}
-					pagingEnabled
-					bounces={false}
-					scrollEventThrottle={16}
-					renderItem={({ item }) => (
-						<View key={item.id} style={[styles.balanceCard]}>
-							<Text style={styles.balanceText}>
-								Total Balance:
-								<Text style={styles.balanceAmount}> ${item.balance}</Text>
-							</Text>
-							<View>
-								<View>
-									<Text style={styles.AccountText}>{item.name} account</Text>
-									<Text style={styles.AccountText}>A/c no {item.number}</Text>
-								</View>
-							</View>
-						</View>
-					)}
-				/>
+				</Pressable>
+				<Link href="/notifications">
+					<FontAwesome name="bell-o" size={24} color="black" />
+				</Link>
 			</View>
 			<View
 				style={{ ...styles.section, backgroundColor: theme.colors.background }}
 			>
-				<Text style={styles.sectionHeader}>Services</Text>
 				<FlatList
-					data={services}
-					numColumns={3}
-					columnWrapperStyle={{ justifyContent: 'space-between', gap: 10 }}
-					keyExtractor={(item) => `${item.id}`}
-					renderItem={renderItem}
-					style={{ marginTop: 12 }}
-				/>
-				<View
-					style={{
-						flexDirection: 'row',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						paddingVertical: 5,
-					}}
-				>
-					<Text style={styles.sectionHeader}>Latest Transactions</Text>
-					<Text style={styles.transactionText}>See All</Text>
-				</View>
-				<FlatList
-					style={{ marginBottom: 20 }}
+					ListHeaderComponent={() => (
+						<>
+							<View
+								style={{
+									...styles.headerContainer,
+									backgroundColor: theme.colors.primary,
+								}}
+							>
+								<FlatList
+									data={accounts}
+									contentContainerStyle={{
+										paddingHorizontal: 10,
+										// marginVertical: 20,
+										gap: 10,
+									}}
+									horizontal
+									showsHorizontalScrollIndicator={false}
+									keyExtractor={(item) => `${item.id}`}
+									pagingEnabled
+									bounces={false}
+									scrollEventThrottle={16}
+									renderItem={({ item }) => (
+										<View key={item.id} style={[styles.balanceCard]}>
+											<Text style={styles.balanceText}>
+												Total Balance:
+												<Text style={styles.balanceAmount}>
+													{' '}
+													${item.balance}
+												</Text>
+											</Text>
+											<View>
+												<View>
+													<Text style={styles.AccountText}>
+														{item.name} account
+													</Text>
+													<Text style={styles.AccountText}>
+														A/c no {item.number}
+													</Text>
+												</View>
+											</View>
+										</View>
+									)}
+								/>
+							</View>
+
+							<View style={styles.sectionHeaderContainer}>
+								<Text style={styles.sectionHeader}>Services</Text>
+								<FlatList
+									data={services}
+									numColumns={3}
+									columnWrapperStyle={{
+										justifyContent: 'space-between',
+										gap: 10,
+									}}
+									keyExtractor={(item) => `${item.id}`}
+									renderItem={renderItem}
+									style={{ marginTop: 12 }}
+								/>
+								<View
+									style={{
+										flexDirection: 'row',
+										justifyContent: 'space-between',
+										alignItems: 'center',
+										paddingVertical: 5,
+									}}
+								>
+									<Text style={styles.sectionHeader}>Latest Transactions</Text>
+									<Text style={styles.transactionText}>See All</Text>
+								</View>
+							</View>
+						</>
+					)}
+					showsVerticalScrollIndicator={false}
+					// showsHorizontalScrollIndicator={false}
 					data={transactions}
 					renderItem={({ item }) => <Transaction item={item} />}
 				/>
@@ -123,19 +166,21 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// backgroundColor: 'red',
+		backgroundColor: 'white',
 		// paddingTop: StatusBar.currentHeight,
 	},
 	headerContainer: {
-		paddingHorizontal: 16,
+		marginTop: 10,
 		paddingVertical: 16,
-		borderBottomLeftRadius: 30,
-		borderBottomRightRadius: 30,
+		borderRadius: 24,
+		flex: 1,
 	},
 	header: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
+		paddingHorizontal: 16,
+		backgroundColor: 'white',
 		// paddingTop: StatusBar.currentHeight,
 	},
 	headerImage: {
@@ -148,8 +193,7 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 	},
 	balanceCard: {
-		// flex: 1,
-		// width: '100%',
+		width: '90%',
 		gap: 4,
 		borderColor: 'white',
 		borderWidth: 1,
@@ -173,8 +217,13 @@ const styles = StyleSheet.create({
 	},
 	section: {
 		paddingHorizontal: 16,
-		paddingVertical: 16,
+		// paddingTop: 16,
 		backgroundColor: '#D0D0D0',
+		flex: 1,
+	},
+	sectionHeaderContainer: {
+		flex: 1,
+		paddingVertical: 10,
 	},
 	sectionHeader: {
 		fontSize: 20,
