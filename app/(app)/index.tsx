@@ -18,6 +18,7 @@ import { Link, router } from 'expo-router';
 import Transaction from '@/components/Transaction';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/authContext';
+import Balance from '@/components/Balance';
 
 export default function HomeScreen() {
 	const theme = useTheme();
@@ -26,7 +27,11 @@ export default function HomeScreen() {
 	const { width } = useWindowDimensions();
 	const renderItem = ({ item }: any) => {
 		return (
-			<View key={item.id} style={styles.serviceItem}>
+			<Pressable
+				onPress={() => router.navigate(`${item.link}}`)}
+				key={item.id}
+				style={styles.serviceItem}
+			>
 				{item.iconType === 'FontAwesome' ? (
 					<FontAwesome
 						name={item.icon}
@@ -45,7 +50,7 @@ export default function HomeScreen() {
 				<Text style={{ ...styles.serviceText, color: theme.colors.primary }}>
 					{item.name}
 				</Text>
-			</View>
+			</Pressable>
 		);
 	};
 
@@ -89,7 +94,8 @@ export default function HomeScreen() {
 									backgroundColor: theme.colors.primary,
 								}}
 							>
-								<FlatList
+								<Balance data={accounts} />
+								{/* <FlatList
 									data={accounts}
 									contentContainerStyle={{
 										paddingHorizontal: 10,
@@ -123,7 +129,7 @@ export default function HomeScreen() {
 											</View>
 										</View>
 									)}
-								/>
+								/> */}
 							</View>
 
 							<View style={styles.sectionHeaderContainer}>
