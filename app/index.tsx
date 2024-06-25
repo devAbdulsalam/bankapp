@@ -10,23 +10,23 @@ import { router } from 'expo-router';
 const Onboarding = () => {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [slides, setSlides] = useState(onBoardingData);
-	
-	const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(false);
+	// const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(false);
 	const scrollX = useRef(new Animated.Value(0)).current;
 	const slidesRef = useRef(null);
 
-
 	useEffect(() => {
-		const fetchSession = async () => {
+		const checkAppFirstLaunch = async () => {
 			const isOnboarded = await AsyncStorage.getItem('isAppFirstLaunched');
 			if (isOnboarded == null || isOnboarded === 'false') {
-				setIsAppFirstLaunched(false);
+				// setIsAppFirstLaunched(false);
+				return;
 			} else {
-				setIsAppFirstLaunched(true);
+				// setIsAppFirstLaunched(true);
+				return router.replace('/home');
 				// AsyncStorage.removeItem('isAppFirstLaunched');
 			}
 		};
-		fetchSession();
+		checkAppFirstLaunch();
 	}, []);
 
 	const viewableItemsChange = useRef(({ viewableItems }: any) => {

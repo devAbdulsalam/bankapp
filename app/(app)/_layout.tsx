@@ -71,6 +71,25 @@ export default function TabLayout() {
 					title: 'Notifications',
 				}}
 			/>
+			<Tabs.Screen
+				name="services"
+				options={{
+					href: null,
+					title: 'Services',
+				}}
+			/>
+			<Tabs.Screen
+				name="transactions"
+				options={{
+					href: null,
+				}}
+			/>
+			<Tabs.Screen
+				name="transaction"
+				options={{
+					href: null,
+				}}
+			/>
 		</Tabs>
 	);
 }

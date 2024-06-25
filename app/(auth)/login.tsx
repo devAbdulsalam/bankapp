@@ -12,15 +12,12 @@ import {
 	Platform,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-// import { RootStackScreenProps } from '../navigators/RootNavigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
-// import Artwork03 from '@/components/artworks/Artwork03';
 import { LOG_IN_SCREEN } from '@/constants/Data';
 import PrimaryButton from '@/components/PrimaryButton';
 import Icons from '@expo/vector-icons/MaterialIcons';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-// import Colors from '@/constants/Colors';
 import { Link, router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,7 +40,7 @@ const LoginScreen = () => {
 		if (session) {
 			router.push('/(app)/');
 		}
-	});
+	}, []);
 
 	const clearData = () => {
 		setIsError('');
@@ -72,7 +69,7 @@ const LoginScreen = () => {
 				setToken(data.accessToken);
 				setProfile(data.user);
 				clearData();
-				Alert.alert('Login success', 'Login successfully');
+				// Alert.alert('Login success', 'Login successfully');
 				router.replace('/(app)/');
 			}
 

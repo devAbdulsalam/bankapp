@@ -5,6 +5,7 @@ import {
 	Modal,
 	Pressable,
 	TextInput,
+	Image,
 	FlatList,
 } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -17,13 +18,20 @@ type ModalProps = {
 	isModal: boolean;
 	setIsModal: () => void;
 	handlePress: (item: any) => void;
-	banks: { id: string | null; code: string; name: string; logo: string }[];
+	banks: {
+		id: string | null;
+		code: string;
+		name: string;
+		slug: string | null;
+		logo: string;
+	}[];
 };
 
 const BankModal = ({ handlePress, isModal, setIsModal, banks }: ModalProps) => {
 	const theme = useTheme();
 	const [query, setQuery] = useState('');
 	const [bankList, setBankList] = useState(banks);
+	// console.log('bankList==========================);', bankList);
 
 	const searchBank = useCallback(
 		debounce((searchQuery) => {
@@ -34,14 +42,13 @@ const BankModal = ({ handlePress, isModal, setIsModal, banks }: ModalProps) => {
 			const filteredBanks = banks.filter(
 				(item) =>
 					item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-					// item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+					item.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
 					item.code.toLowerCase().includes(searchQuery.toLowerCase())
 			);
 			setBankList(filteredBanks);
 		}, 300),
 		[banks]
 	);
-
 	useEffect(() => {
 		searchBank(query);
 	}, [query, searchBank]);
@@ -54,10 +61,15 @@ const BankModal = ({ handlePress, isModal, setIsModal, banks }: ModalProps) => {
 			animationType="slide"
 		>
 			<View style={styles.overlay}>
-				<View style={styles.container}>
-					<Header title="Select Bank" onPress={() => setIsModal(false)} />
+				<Header title="Select Bank" onPress={() => setIsModal(false)} />
+				<View style={{ backgroundColor: theme.colors.background, padding: 10 }}>
 					<View
-						style={{ position: 'relative', width: '100%', marginVertical: 10 }}
+						style={{
+							position: 'relative',
+							width: '100%',
+							marginVertical: 5,
+							paddingHorizontal: 10,
+						}}
 					>
 						<TextInput
 							placeholder="Search Bank"
@@ -68,8 +80,9 @@ const BankModal = ({ handlePress, isModal, setIsModal, banks }: ModalProps) => {
 								paddingLeft: 48,
 								paddingRight: 12,
 								height: 48,
-								borderRadius: 12,
-								backgroundColor: theme.colors.background,
+								borderRadius: 10,
+								borderColor: theme.colors.border,
+								backgroundColor: 'white',
 								width: '100%',
 							}}
 							value={query}
@@ -81,31 +94,39 @@ const BankModal = ({ handlePress, isModal, setIsModal, banks }: ModalProps) => {
 							color={theme.colors.text}
 							style={{
 								position: 'absolute',
-								left: 12,
+								left: 20,
 								top: 12,
 							}}
 						/>
 					</View>
-					<View style={styles.card}>
-						<FlatList
-							data={bankList}
-							keyExtractor={(item) => item.code}
-							renderItem={({ item }) => (
+					<FlatList
+						data={bankList}
+						keyExtractor={(item) => item.code}
+						renderItem={({ item }) => {
+							return (
 								<Pressable
 									onPress={() => handlePress(item)}
-									style={[
-										styles.cardItem,
-										{ backgroundColor: theme.colors.background },
-									]}
+									style={[styles.cardItem]}
 								>
+									<Image
+										source={{ uri: item.logo }}
+										style={{
+											height: 40,
+											width: 40,
+											borderRadius: 20,
+											borderWidth: 1,
+											marginRight: 10,
+											// borderColor: COLORS.secondary,
+										}}
+									/>
 									<Text style={[styles.text, { color: theme.colors.text }]}>
 										{item.name}
 									</Text>
 								</Pressable>
-							)}
-							contentContainerStyle={{ padding: 10 }}
-						/>
-					</View>
+							);
+						}}
+						contentContainerStyle={{ padding: 10 }}
+					/>
 				</View>
 			</View>
 		</Modal>
@@ -117,27 +138,21 @@ export default BankModal;
 const styles = StyleSheet.create({
 	overlay: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'rgba(0,0,0,0.5)',
-	},
-	container: {
-		width: '90%',
-		padding: 20,
+		width: '100%',
 		backgroundColor: 'white',
-		borderRadius: 8,
-	},
-	card: {
-		flex: 1,
 	},
 	cardItem: {
 		padding: 16,
 		marginVertical: 4,
 		borderRadius: 8,
+		flexDirection: 'row',
+		backgroundColor: 'white',
+		// justifyContent: 'center',
+		alignItems: 'center',
 	},
 	text: {
 		fontWeight: '600',
 		fontSize: 16,
-		textAlign: 'center',
+		// textAlign: 'center',
 	},
 });

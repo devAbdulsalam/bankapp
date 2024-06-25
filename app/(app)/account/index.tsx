@@ -7,17 +7,23 @@ import {
 	Text,
 	View,
 	Alert,
+	ScrollView,
 } from 'react-native';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
-import Loader from '@/components/Loader';
-import BankModal from '@/components/modals/BankModal';
 import { useAuth } from '@/context/authContext';
 import { useTheme } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
-import { fetchBanks } from '@/api';
+import { settingData } from '@/constants/Data';
+import { getIconComponent } from '@/hooks/getIcon';
 
 // const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+type SettingItem = {
+	id: number;
+	name: string;
+	icon: string;
+	iconType: string;
+	link: string;
+};
 
 const Index = () => {
 	// const { profile, token } = useAuth();
@@ -27,7 +33,7 @@ const Index = () => {
 		await AsyncStorage.removeItem('accessToken');
 		await AsyncStorage.removeItem('userInfo');
 		await AsyncStorage.removeItem('refreshToken');
-		await AsyncStorage.removeItem('isAppFirstLaunched');
+		// await AsyncStorage.removeItem('isAppFirstLaunched');
 		setToken(null);
 		setSesion(null);
 		setProfile(null);
@@ -47,6 +53,25 @@ const Index = () => {
 			},
 		]);
 	};
+
+	const SettingItem = ({ item }: { item: SettingItem }) => {
+		const IconComponent = getIconComponent(item.iconType);
+		return (
+			<Pressable
+				key={item.id}
+				onPress={() => router.navigate(item.link)}
+				style={styles.pressable}
+			>
+				<View style={styles.iconContainer}>
+					<IconComponent name={item.icon} size={18} color={theme.colors.text} />
+				</View>
+				<Text style={[styles.text, { color: theme.colors.text }]}>
+					{item.name}
+				</Text>
+			</Pressable>
+		);
+	};
+
 	return (
 		<View style={styles.header}>
 			<View
@@ -105,19 +130,32 @@ const Index = () => {
 					<FontAwesome name="edit" size={18} color={theme.colors.text} />
 				</Pressable>
 			</View>
-
-			<Pressable
-				onPress={handleLogout}
-				style={{
-					justifyContent: 'center',
-					backgroundColor: 'red',
-					flexDirection: 'row',
-					padding: 15,
-					borderRadius: 10,
-				}}
-			>
-				<Text style={styles.text}>Log out</Text>
-			</Pressable>
+			<ScrollView style={{ paddingHorizontal: 10 }}>
+				{settingData.map((item: any) => (
+					<SettingItem key={item.id} item={item} />
+				))}
+				<Pressable
+					onPress={handleLogout}
+					style={{
+						justifyContent: 'center',
+						backgroundColor: 'red',
+						flexDirection: 'row',
+						padding: 15,
+						borderRadius: 10,
+					}}
+				>
+					<View
+						style={{
+							paddingHorizontal: 10,
+							paddingVertical: 12,
+							borderRadius: 10,
+						}}
+					>
+						<FontAwesome name="edit" size={18} color={theme.colors.text} />
+					</View>
+					<Text style={styles.text}>Log out</Text>
+				</Pressable>
+			</ScrollView>
 		</View>
 	);
 };
@@ -145,5 +183,17 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: 'white',
 		textAlign: 'center',
+	},
+	pressable: {
+		alignItems: 'center',
+		flexDirection: 'row',
+		padding: 15,
+		borderRadius: 10,
+		marginBottom: 5, // added to separate items
+	},
+	iconContainer: {
+		paddingHorizontal: 10,
+		paddingVertical: 12,
+		borderRadius: 10,
 	},
 });

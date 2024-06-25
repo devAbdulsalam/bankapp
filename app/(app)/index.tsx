@@ -19,6 +19,7 @@ import Transaction from '@/components/Transaction';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/authContext';
 import Balance from '@/components/Balance';
+import { getIconComponent } from '@/hooks/getIcon';
 
 export default function HomeScreen() {
 	const theme = useTheme();
@@ -26,22 +27,21 @@ export default function HomeScreen() {
 	const { profile, token } = useAuth();
 	const { width } = useWindowDimensions();
 	const renderItem = ({ item }: any) => {
+		const IconComponent = getIconComponent(item.iconType);
 		return (
 			<Pressable
-				onPress={() => router.navigate(`${item.link}}`)}
+				onPress={() => router.navigate(`${item.link}`)}
 				key={item.id}
 				style={styles.serviceItem}
 			>
-				{item.iconType === 'FontAwesome' ? (
-					<FontAwesome
+				{item.iconType === 'Feather ' ? (
+					<IconComponent
 						name={item.icon}
-						size={24}
+						size={26}
 						color={theme.colors.primary}
 					/>
-				) : item.iconType === 'Feather ' ? (
-					<Feather name={item.icon} size={26} color={theme.colors.primary} />
 				) : (
-					<FontAwesome6
+					<IconComponent
 						name={item.icon}
 						size={24}
 						color={theme.colors.primary}
@@ -88,49 +88,7 @@ export default function HomeScreen() {
 				<FlatList
 					ListHeaderComponent={() => (
 						<>
-							<View
-								style={{
-									...styles.headerContainer,
-									backgroundColor: theme.colors.primary,
-								}}
-							>
-								<Balance data={accounts} />
-								{/* <FlatList
-									data={accounts}
-									contentContainerStyle={{
-										paddingHorizontal: 10,
-										// marginVertical: 20,
-										gap: 10,
-									}}
-									horizontal
-									showsHorizontalScrollIndicator={false}
-									keyExtractor={(item) => `${item.id}`}
-									pagingEnabled
-									bounces={false}
-									scrollEventThrottle={16}
-									renderItem={({ item }) => (
-										<View key={item.id} style={[styles.balanceCard]}>
-											<Text style={styles.balanceText}>
-												Total Balance:
-												<Text style={styles.balanceAmount}>
-													{' '}
-													${item.balance}
-												</Text>
-											</Text>
-											<View>
-												<View>
-													<Text style={styles.AccountText}>
-														{item.name} account
-													</Text>
-													<Text style={styles.AccountText}>
-														A/c no {item.number}
-													</Text>
-												</View>
-											</View>
-										</View>
-									)}
-								/> */}
-							</View>
+							<Balance data={accounts} />
 
 							<View style={styles.sectionHeaderContainer}>
 								<Text style={styles.sectionHeader}>Services</Text>
@@ -174,12 +132,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: 'white',
 		// paddingTop: StatusBar.currentHeight,
-	},
-	headerContainer: {
-		marginTop: 10,
-		paddingVertical: 16,
-		borderRadius: 24,
-		flex: 1,
 	},
 	header: {
 		flexDirection: 'row',

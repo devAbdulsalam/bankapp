@@ -10,11 +10,17 @@ import React from 'react';
 import { transactions } from '@/constants/Data';
 import { FontAwesome } from '@expo/vector-icons';
 import Header from '@/components/Header';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTransactions } from '@/api';
+import { router } from 'expo-router';
 
-const notifications = () => {
+const Transactions = () => {
+
+	const {data} = useQuery({queryKey: ['transactions'], queryFn: fetchTransactions})
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header title="Notifications" />
+			<Header title="Transactions" onPress={() => router.back()} />
 			{/* <View style={styles.container}> */}
 			<FlatList
 				// ListHeaderComponent={}
@@ -53,7 +59,7 @@ const notifications = () => {
 	);
 };
 
-export default notifications;
+export default Transactions;
 
 const styles = StyleSheet.create({
 	container: {

@@ -5,7 +5,7 @@ const Loader = () => {
 	return (
 		<View style={styles.container}>
 			<View>
-				<ActivityIndicator size="large" />
+				<ActivityIndicator size="large" color="blue" />
 				<Text style={{ color: 'blue' }}>Loading ...</Text>
 			</View>
 		</View>

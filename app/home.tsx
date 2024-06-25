@@ -8,11 +8,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import PrimaryButton from '@/components/PrimaryButton';
 import { LinearGradient } from 'expo-linear-gradient';
-import images from '@/constants/Images';
+import { getAxiosError } from '@/hooks/getError';
+const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+import Svg01 from '@/components/svgIcons';
+import axios from 'axios';
+import { useAuth } from '@/context/authContext';
 
 const index = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const theme = useTheme();
+	const { logout } = useAuth();
 
 	const fetchSession = async () => {
 		try {
@@ -21,16 +26,21 @@ const index = () => {
 			if (accessToken === null || accessToken === '') {
 				return router.replace('/(auth)/login');
 			}
-			// 	if (accessToken) {
-			// 		const userinfo = await AsyncStorage.getItem('userInfo');
-			// 		const user = JSON.parse(userinfo);
-			// 		if (user?.role === 'ADMIN') {
-			// 			AsyncStorage.setItem('isAdmin', 'true');
-			// 		}
-			//   }
-			// const accessToken = await AsyncStorage.getItem('accessToken');
+			const { data } = await axios.post(`${apiUrl}/users/refresh-token`, {});
+			if (data) {
+				// console.log('refresh', data);
+				await AsyncStorage.setItem('accessToken', data.accessToken);
+				// 	await AsyncStorage.getItem('refreshToken', data.refreshToken);
+				return router.replace('/(app)/');
+			}
 		} catch (e) {
-			console.log('Error @checkOnbaording', e);
+			const message = await getAxiosError(e);
+			if (message === 'Refresh token is expired or used') {
+				await logout();
+				router.replace('/(auth)/login');
+				return;
+			}
+			console.log('Error @checkOnbaording', message);
 		} finally {
 			setIsLoading(false);
 		}
@@ -46,15 +56,20 @@ const index = () => {
 			) : (
 				<SafeAreaView style={{ backgroundColor: theme.colors.card, flex: 1 }}>
 					<LinearGradient
-						colors={['blue', 'white', 'white', 'white']}
+						colors={['lightblue', '#fffad0c4', 'white', 'lightblue']}
+						// colors={['lightblue', 'blue', 'white', '#ffff9a9e', '#fffad0c4']}
 						style={{ flex: 1, width: '100%' }}
+						start={{ x: 0.5, y: 0.2 }}
+						end={{ x: 1, y: 1 }}
+						locations={[0, 0.5, 1, 0.6]}
 					>
 						<View style={styles.container}>
-							<Image
+							{/* <Image
 								source={images.savings}
 								style={styles.image}
 								resizeMode="contain"
-							/>
+							/> */}
+							<Svg01 width={240} height={240} />
 							<Animated.Text style={styles.text}>
 								Healthy, Wealthy, Together
 							</Animated.Text>
@@ -99,6 +114,8 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	text: {
-		color: 'white',
+		color: 'blue',
+		fontSize: 30,
+		fontWeight: 'bold',
 	},
 });

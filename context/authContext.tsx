@@ -17,6 +17,7 @@ type AuthData = {
 	setToken: () => null | string;
 	setSesion: () => null | string;
 	setProfile: () => null | string;
+	logout: () => void;
 };
 
 const AuthContext = createContext<AuthData>({
@@ -56,6 +57,16 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 		fetchSession();
 	}, []);
 
+	const logout = async () => {
+		await AsyncStorage.removeItem('accessToken');
+		await AsyncStorage.removeItem('userInfo');
+		await AsyncStorage.removeItem('refreshToken');
+		await AsyncStorage.removeItem('isAppFirstLaunched');
+		setToken(null);
+		setSesion(null);
+		setProfile(null);
+	};
+
 	return (
 		<AuthContext.Provider
 			value={{
@@ -67,6 +78,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 				profile,
 				setProfile,
 				isAdmin,
+				logout,
 			}}
 		>
 			{children}
