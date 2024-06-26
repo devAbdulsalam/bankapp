@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useCallback } from 'react';
 import {
 	Alert,
 	Pressable,
@@ -6,71 +7,86 @@ import {
 	View,
 	TextInput,
 } from 'react-native';
-import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useTheme } from '@react-navigation/native';
+import { useAuth } from '@/context/authContext';
+import { fetchBanks, verifyAccount } from '@/api';
 import PrimaryButton from '@/components/PrimaryButton';
 import Loader from '@/components/Loader';
 import BankModal from '@/components/modals/BankModal';
-import { useAuth } from '@/context/authContext';
-import { useTheme } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
-import { fetchBanks, verifyAccount } from '@/api';
 import Header from '@/components/Header';
 import { router } from 'expo-router';
 import { getAxiosError } from '@/hooks/getError';
 
-const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
-const transfer = () => {
+const Transfer = () => {
 	const { profile, token } = useAuth();
 	const theme = useTheme();
-	const { data } = useQuery({
+	const { data: banks } = useQuery({
 		queryKey: ['banks'],
 		queryFn: () => fetchBanks(token),
 	});
 	const [accountNumber, setAccountNumber] = useState('');
 	const [accountName, setAccountName] = useState('');
-	const [bank, setBank] = useState('');
+	const [selectedBank, setSelectedBank] = useState(null);
 	const [showBankModal, setShowBankModal] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isError, setIsError] = useState('');
 
-	const handelSelectBank = async (item: any) => {
-		try {
-			setBank(() => item);
-			setShowBankModal(false);
-			if (!accountNumber) {
-				return setIsError('Invalid Account Number');
-			}
-			const data = {
-				accountNumber,
-				bank,
-			};
-			const checkAccount = await verifyAccount(data);
-
-			console.log(checkAccount);
-			setAccountName('checkAccount');
-		} catch (error) {
-			console.warn('Error', '@post forgot password', { ...error });
-			const message = await getAxiosError(error);
-			Alert.alert('Error sigining up', message, [
-				{ text: 'OK', onPress: () => {} },
-			]);
+	const checkAccount = useCallback(async () => {
+		// return if account number is not 10 digits or bank is not selected.
+		if (accountNumber.length !== 10 || !selectedBank) {
+			setAccountName('');
+			return;
 		}
+		setIsError('');
+		const data = { account: accountNumber, bank: selectedBank.code };
+
+		try {
+			setIsLoading(true);
+			const checkAccountResponse = await verifyAccount(data);
+			setIsLoading(false);
+
+			if (!checkAccountResponse.accountName) {
+				setIsError('Check Account number or bank details');
+			} else {
+				setAccountName(checkAccountResponse.accountName);
+			}
+		} catch (error) {
+			setIsLoading(false);
+			const message = await getAxiosError(error);
+			console.warn(message);
+			// Alert.alert('Error verifying account', message);
+		}
+	}, [accountNumber, selectedBank]);
+
+	useEffect(() => {
+		checkAccount();
+	}, [accountNumber, selectedBank]);
+
+	const handleSelectBank = (item) => {
+		setSelectedBank(item);
+		setShowBankModal(false);
 	};
 
 	const handleTransfer = async () => {
+		if (!accountNumber || !accountName || !selectedBank) {
+			setIsError('Invalid Receipiant Account');
+			return;
+		}
 		try {
-			if (!accountNumber) {
-				return setIsError('Invalid Account Number');
-			}
-			const data = {
-				accountName,
-				accountNumber,
-				bank,
-			};
-
-			router.navigate('/finance/confirm-transfer', data);
-		} catch (error) {}
+			router.navigate({
+				pathname: '/finance/confirm-transfer',
+				params: {
+					accountName,
+					accountNumber,
+					bankCode: selectedBank?.code,
+					bankName: selectedBank?.name,
+				},
+			});
+		} catch (error) {
+			const message = await getAxiosError(error);
+			Alert.alert('Error transferring money', message);
+		}
 	};
 
 	return (
@@ -80,67 +96,43 @@ const transfer = () => {
 			) : (
 				<View>
 					<Header title="Transfer Money" />
-					<View style={{ padding: 10 }}>
-						<View style={{ marginBottom: 5 }}>
-							<Text
-								style={{ fontSize: 18, fontWeight: 'semibold', padding: 5 }}
-							>
-								Account number
-							</Text>
-							<View>
-								<TextInput
-									placeholder="Enter Account Number"
-									style={{
-										fontSize: 16,
-										fontWeight: '500',
+					<View style={styles.container}>
+						<View style={styles.inputContainer}>
+							<Text style={styles.label}>Account number</Text>
+							<TextInput
+								placeholder="Enter Account Number"
+								style={[
+									styles.input,
+									{
 										color: theme.colors.text,
-										paddingLeft: 12,
-										paddingRight: 12,
-										height: 48,
-										borderRadius: 12,
 										backgroundColor: 'white',
-										width: '100%',
-									}}
-									value={accountNumber}
-									onChangeText={setAccountNumber}
-								/>
-							</View>
-							{isError && (
-								<Text style={{ color: 'red', fontSize: 10, padding: 5 }}>
-									{isError}
-								</Text>
-							)}
+									},
+								]}
+								value={accountNumber}
+								onChangeText={setAccountNumber}
+								keyboardType="numeric"
+								maxLength={10}
+							/>
+							{isError && <Text style={styles.errorText}>{isError}</Text>}
 						</View>
-						<View>
-							<Text
-								style={{ fontSize: 18, fontWeight: 'semibold', padding: 5 }}
-							>
-								Select bank
-							</Text>
+						<View style={styles.inputContainer}>
+							<Pressable onPress={() => setShowBankModal(true)}>
+								<Text style={styles.label}>Select bank</Text>
+							</Pressable>
 							<Pressable
 								onPress={() => setShowBankModal(true)}
-								style={{
-									padding: 10,
-									borderRadius: 10,
-									backgroundColor: 'white',
-								}}
+								style={[styles.bankSelector, { backgroundColor: 'white' }]}
 							>
-								<Text style={{ color: theme.colors.text }}>{bank}</Text>
+								<Text style={{ color: theme.colors.text, padding: 5 }}>
+									{selectedBank ? selectedBank?.name : 'Select bank'}
+								</Text>
 							</Pressable>
 						</View>
 						{accountName && (
-							<View style={{ marginTop: 5 }}>
-								<Text
-									style={{ fontSize: 18, fontWeight: 'semibold', padding: 5 }}
-								>
-									Account Name
-								</Text>
+							<View style={styles.accountNameContainer}>
+								<Text style={styles.label}>Account Name</Text>
 								<View
-									style={{
-										padding: 10,
-										borderRadius: 10,
-										backgroundColor: 'white',
-									}}
+									style={[styles.accountNameBox, { backgroundColor: 'white' }]}
 								>
 									<Text style={{ color: theme.colors.text }}>
 										{accountName}
@@ -148,34 +140,26 @@ const transfer = () => {
 								</View>
 							</View>
 						)}
-
-						{!accountName ? (
-							<Pressable
-								// onPress={() => handlePress(item)}
-								style={[
-									styles.button,
-									{
-										backgroundColor: theme.colors.background,
-										borderColor: 'gray',
-									},
-								]}
-							>
-								<Text style={[styles.text, { color: theme.colors.text }]}>
-									Transfer now
-								</Text>
-							</Pressable>
-						) : (
-							<PrimaryButton label="Transfer now" onPress={handleTransfer} />
-						)}
+						<View style={styles.buttonContainer}>
+							<PrimaryButton
+								label="Transfer now"
+								onPress={!accountName ? () => {} : handleTransfer}
+								style={{
+									backgroundColor: !accountName
+										? '#D0D0D0'
+										: theme.colors.primary,
+								}}
+							/>
+						</View>
 					</View>
 				</View>
 			)}
 			{showBankModal && (
 				<BankModal
-					handlePress={handelSelectBank}
+					handlePress={handleSelectBank}
 					isModal={showBankModal}
 					setIsModal={setShowBankModal}
-					banks={data}
+					banks={banks}
 				/>
 			)}
 		</>
@@ -183,18 +167,47 @@ const transfer = () => {
 };
 
 const styles = StyleSheet.create({
-	button: {
-		width: '100%',
-		justifyContent: 'center',
-		alignItems: 'center',
-		height: 56,
-		borderRadius: 8,
+	container: {
+		padding: 10,
+		paddingHorizontal: 16,
 	},
-	text: {
-		fontWeight: '600',
+	inputContainer: {
+		marginBottom: 5,
+	},
+	label: {
+		fontSize: 18,
+		fontWeight: 'semibold',
+		padding: 5,
+	},
+	input: {
 		fontSize: 16,
-		color: 'white',
-		textAlign: 'center',
+		fontWeight: '500',
+		paddingLeft: 12,
+		paddingRight: 12,
+		height: 48,
+		borderRadius: 12,
+		width: '100%',
+		backgroundColor: 'white',
+	},
+	errorText: {
+		color: 'red',
+		fontSize: 10,
+		padding: 5,
+	},
+	bankSelector: {
+		padding: 10,
+		borderRadius: 10,
+	},
+	accountNameContainer: {
+		marginVertical: 10,
+	},
+	buttonContainer: {
+		marginTop: 10,
+	},
+	accountNameBox: {
+		padding: 10,
+		borderRadius: 10,
 	},
 });
-export default transfer;
+
+export default Transfer;

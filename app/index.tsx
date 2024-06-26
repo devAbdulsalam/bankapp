@@ -17,13 +17,13 @@ const Onboarding = () => {
 	useEffect(() => {
 		const checkAppFirstLaunch = async () => {
 			const isOnboarded = await AsyncStorage.getItem('isAppFirstLaunched');
-			if (isOnboarded == null || isOnboarded === 'false') {
+			if (isOnboarded) {
+				return router.replace('/home');
 				// setIsAppFirstLaunched(false);
-				return;
 			} else {
 				// setIsAppFirstLaunched(true);
-				return router.replace('/home');
 				// AsyncStorage.removeItem('isAppFirstLaunched');
+				return;
 			}
 		};
 		checkAppFirstLaunch();

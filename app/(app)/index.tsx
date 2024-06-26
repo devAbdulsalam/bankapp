@@ -7,11 +7,8 @@ import {
 	Platform,
 	View,
 	Text,
-	StatusBar,
 	FlatList,
-	ScrollView,
 	Pressable,
-	useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Link, router } from 'expo-router';
@@ -25,7 +22,6 @@ export default function HomeScreen() {
 	const theme = useTheme();
 
 	const { profile, token } = useAuth();
-	const { width } = useWindowDimensions();
 	const renderItem = ({ item }: any) => {
 		const IconComponent = getIconComponent(item.iconType);
 		return (

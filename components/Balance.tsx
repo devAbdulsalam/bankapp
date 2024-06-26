@@ -7,6 +7,7 @@ import {
 	useWindowDimensions,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
+import { useTheme } from '@react-navigation/native';
 
 const Balance = ({ data }: any) => {
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -16,6 +17,10 @@ const Balance = ({ data }: any) => {
 		setCurrentIndex(viewableItems[0].index);
 	}).current;
 	const { width } = useWindowDimensions();
+	const theme = useTheme();
+	// console.log('HomeScreen profile', width - 20);
+
+	const cardWidth = width - 60;
 	const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 	return (
 		<View style={styles.headerContainer}>
@@ -23,7 +28,13 @@ const Balance = ({ data }: any) => {
 				data={data}
 				keyExtractor={(item) => `${item.id}`}
 				renderItem={({ item }) => (
-					<View key={item.id} style={[styles.balanceCard, { width }]}>
+					<View
+						key={item.id}
+						style={[
+							styles.balanceCard,
+							{ width: cardWidth, backgroundColor: theme.colors.primary },
+						]}
+					>
 						<Text style={styles.balanceText}>
 							Total Balance:
 							<Text style={styles.balanceAmount}> ${item.balance}</Text>
@@ -72,6 +83,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 18,
 		paddingVertical: 16,
 		shadowColor: 'white',
+		backgroundColor: 'blue',
 	},
 	balanceText: {
 		color: 'white',

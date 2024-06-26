@@ -34,7 +34,7 @@ export const fetchTransactions = async (props) => {
 		return error;
 	}
 };
-export const fetchBanks = async () => {
+export const fetchBanks = async (props) => {
 	try {
 		const data = await axios
 			.get(`https://nigerianbanks.xyz`)
@@ -111,13 +111,13 @@ export const fetchTransaction = async (props) => {
 		return error;
 	}
 };
-export const Transfer = async (props) => {
-	const config = {
-		headers: {
-			Authorization: `Bearer ${props?.accessToken}`,
-		},
-	};
-	const { account_bank, amount, account_number, requestId } = props.data;
+export const verifyAccount22 = async (props) => {
+	// const config = {
+	// 	headers: {
+	// 		Authorization: `Bearer ${props?.accessToken}`,
+	// 	},
+	// };
+	const { account_bank, amount, account_number, requestId } = props;
 	// if (!account_number || !amount,  || !account_bank) {
 	// 	return res.status(422).json({ message: 'Please enter valid credentials' });
 	// }
@@ -167,13 +167,13 @@ export const Transfer = async (props) => {
 	}
 };
 
-export const verifyAccount = async (props) => {
+export const verifyAccount3 = async (props) => {
 	const apiToken = 'Yu3OJtW6z80ccmVjYcEmqlZipTuT4UYs2xc6jgpM2df870e6';
 
 	// https://nubapi.com/bank-json
 
-	const { account, bank } = props.data;
 	try {
+		const { account, bank } = props;
 		const response = await fetch(
 			`http://nubapi.test/api/verify?account_number=${account}&bank_code=${bank}`,
 			{
@@ -193,10 +193,24 @@ export const verifyAccount = async (props) => {
 
 		return data;
 	} catch (error) {
-		console.error(error);
+		console.error(...error);
+		return error;
 	}
 };
-export const verifyAccount2 = async (props) => {
+
+export const verifyAccount = async (props) => {
+	try {
+		const { account, bank } = props;
+		const response = await axios
+			.post(`${apiUrl}/payment/verify-account`, { account, bank })
+			.then((res) => res.data);
+		return response;
+	} catch (error) {
+		console.error(error);
+		return error;
+	}
+};
+export const Transfer = async (props) => {
 	const config = {
 		headers: {
 			Authorization: `Bearer ${props?.accessToken}`,

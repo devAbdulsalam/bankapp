@@ -13,6 +13,7 @@ const PrimaryButton = ({
 	label,
 	style,
 	labelStyle,
+	
 }: {
 	onPress?: () => void;
 	label: string;

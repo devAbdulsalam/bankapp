@@ -39,6 +39,9 @@ const BankModal = ({ handlePress, isModal, setIsModal, banks }: ModalProps) => {
 				setBankList(banks);
 				return;
 			}
+			if (banks.length < 0) {
+				return;
+			}
 			const filteredBanks = banks.filter(
 				(item) =>
 					item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
