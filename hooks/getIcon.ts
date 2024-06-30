@@ -40,3 +40,18 @@ export const getIconComponent = (iconType: string) => {
 			return FontAwesome6;
 	}
 };
+
+
+// const data = [mobile: '<Entypo name="mobile" size={24} color="black" />', bill : '<MaterialCommunityIcons name="cash" size={24} color="black" />' , electricity: '<MaterialIcons name="electric-bolt" size={24} color="black" />'
+// const getTransactionIcon = (type) => {
+// 	switch(type) {
+// 		case 'mobile':
+// 			return <Entypo name="mobile" size={24} color="black" />;
+// 		case 'bill':
+// 			return <MaterialCommunityIcons name="cash" size={24} color="black" />;
+// 		case 'electricity':
+// 			return <MaterialIcons name="electric-bolt" size={24} color="black" />;
+// 		default:
+// 			return <FontAwesome6 name={type === 'transfer' ? "arrow-right-arrow-left" : "money-bill-transfer"} size={24} color="black" />;
+// 	}
+// };

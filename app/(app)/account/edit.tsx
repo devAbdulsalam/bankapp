@@ -16,6 +16,7 @@ import { useTheme } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import Header from '@/components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 const edit = () => {
@@ -66,8 +67,8 @@ const edit = () => {
 			{isLoading ? (
 				<Loader />
 			) : (
-				<View>
-					<Header title="Edit profile" />
+				<View style={styles.container}>
+					<Header title="Edit profile" onPress={() => router.back()} />
 					<View>
 						<View>
 							<View>
@@ -78,7 +79,7 @@ const edit = () => {
 										fontSize: 16,
 										fontWeight: '500',
 										color: theme.colors.text,
-										paddingLeft: 48,
+										paddingLeft: 12,
 										paddingRight: 12,
 										height: 48,
 										borderRadius: 12,
@@ -96,7 +97,7 @@ const edit = () => {
 										fontSize: 16,
 										fontWeight: '500',
 										color: theme.colors.text,
-										paddingLeft: 48,
+										paddingLeft: 12,
 										paddingRight: 12,
 										height: 48,
 										borderRadius: 12,
@@ -126,6 +127,10 @@ const edit = () => {
 	);
 };
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 10,
+	},
 	button: {
 		width: '100%',
 		justifyContent: 'center',

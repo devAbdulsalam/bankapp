@@ -10,7 +10,7 @@ import {
 	ScrollView,
 } from 'react-native';
 import { router } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Feather } from '@expo/vector-icons';
 import { useAuth } from '@/context/authContext';
 import { useTheme } from '@react-navigation/native';
 import { settingData } from '@/constants/Data';
@@ -28,19 +28,13 @@ type SettingItem = {
 const Index = () => {
 	// const { profile, token } = useAuth();
 	const theme = useTheme();
-	const { profile, setProfile, setSesion, setToken } = useAuth();
-	const logout = async () => {
-		await AsyncStorage.removeItem('accessToken');
-		await AsyncStorage.removeItem('userInfo');
-		await AsyncStorage.removeItem('refreshToken');
-		// await AsyncStorage.removeItem('isAppFirstLaunched');
-		setToken(null);
-		setSesion(null);
-		setProfile(null);
+	const { profile, logout } = useAuth();
+	const logoutFn = async () => {
+		await logout();
 		router.navigate('/');
 	};
 	const handleLogout = () => {
-		Alert.alert('Are you sure?', 'You will be logout', [
+		Alert.alert('Logout','Are you sure you want to log out?', [
 			{
 				text: 'cancel',
 				onPress: () => {
@@ -49,7 +43,7 @@ const Index = () => {
 			},
 			{
 				text: 'ok',
-				onPress: logout,
+				onPress: logoutFn,
 			},
 		]);
 	};
@@ -63,7 +57,7 @@ const Index = () => {
 				style={styles.pressable}
 			>
 				<View style={styles.iconContainer}>
-					<IconComponent name={item.icon} size={18} color={theme.colors.text} />
+					<IconComponent name={item.icon} size={24} color={theme.colors.text} />
 				</View>
 				<Text style={[styles.text, { color: theme.colors.text }]}>
 					{item.name}
@@ -130,19 +124,23 @@ const Index = () => {
 					<FontAwesome name="edit" size={18} color={theme.colors.text} />
 				</Pressable>
 			</View>
-			<ScrollView style={{ paddingHorizontal: 10 }}>
+			<ScrollView style={{ paddingHorizontal: 10, marginTop: 4 }}>
 				{settingData.map((item: any) => (
 					<SettingItem key={item.id} item={item} />
 				))}
 				<Pressable
 					onPress={handleLogout}
-					style={{
-						justifyContent: 'center',
-						backgroundColor: 'red',
-						flexDirection: 'row',
-						padding: 15,
-						borderRadius: 10,
-					}}
+					style={[
+						styles.pressable,
+						{
+							// justifyContent: 'center',
+							// backgroundColor: 'red',
+							alignContent: 'center',
+							flexDirection: 'row',
+							padding: 15,
+							borderRadius: 10,
+						},
+					]}
 				>
 					<View
 						style={{
@@ -151,9 +149,9 @@ const Index = () => {
 							borderRadius: 10,
 						}}
 					>
-						<FontAwesome name="edit" size={18} color={theme.colors.text} />
+						<Feather name="log-out" size={24} color="red" />
 					</View>
-					<Text style={styles.text}>Log out</Text>
+					<Text style={[styles.text, { color: 'red' }]}>Log out</Text>
 				</Pressable>
 			</ScrollView>
 		</View>
@@ -187,9 +185,14 @@ const styles = StyleSheet.create({
 	pressable: {
 		alignItems: 'center',
 		flexDirection: 'row',
-		padding: 15,
+		padding: 8,
 		borderRadius: 10,
-		marginBottom: 5, // added to separate items
+		marginBottom: 2, // added to separate items
+		backgroundColor: 'white',
+		borderColor: 'gray',
+		// borderRadius: 5,
+		// borderWidth: 1,
+		// marginBottom: 20,
 	},
 	iconContainer: {
 		paddingHorizontal: 10,

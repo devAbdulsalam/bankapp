@@ -1,16 +1,10 @@
-import {
-	ActivityIndicator,
-	Modal,
-	Pressable,
-	StyleSheet,
-	Text,
-	TextInput,
-	View,
-} from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View, Image } from 'react-native';
 import React from 'react';
 import PrimaryButton from '../PrimaryButton';
 import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
+import Header from '../Header';
+import { calculatePercentage } from '@/hooks';
 
 type ModalProps = {
 	isModal: boolean;
@@ -30,6 +24,7 @@ const Index = ({
 	setIsSavePercentage,
 }: ModalProps) => {
 	const theme = useTheme();
+
 	return (
 		<Modal
 			visible={isModal}
@@ -38,44 +33,83 @@ const Index = ({
 			animationType="slide"
 		>
 			<View style={styles.overlay}>
+				<Header title="Confirm Transfer" onPress={() => setIsModal(false)} />
 				<View style={styles.card}>
-					<Pressable onPress={() => setIsModal(false)}>
-						<Text style={{ fontSize: 20, fontWeight: 'bold' }}>X</Text>
-					</Pressable>
+					<View
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							justifyContent: 'center',
+							marginVertical: 20,
+						}}
+					>
+						<Image
+							source={{
+								uri:
+									data?.bankImage ||
+									`https://ui-avatars.com/api/?name=${data?.bankImage}`,
+							}}
+							style={{
+								height: 60,
+								width: 60,
+								borderRadius: 30,
+								borderWidth: 1,
+								// borderColor: COLORS.secondary,
+							}}
+						/>
+					</View>
 					<Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
-						Transfer to {data?.accountNumber}
+						Transfer to {data?.accountName}
 					</Text>
 					<Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
-						Transfer Name {data?.accountName}
+						Account Number {data?.accountNumber}
 					</Text>
 					<Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
-						Transfer Amount {data?.amount}
+						Amount: ₦{data?.amount}
 					</Text>
-					<Text style={{ fontSize: 16, marginBottom: 10 }}>
-						Enter your PIN to proceed
-					</Text>
-					<View style={styles.saveContainer}>
-						<View style={styles.saveCard}>
-							<Text style={styles.title}>Select Bit</Text>
-							<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-								<Text>Save 10% percent of amount send</Text>
-								<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-									<Text style={{ color: theme.colors.primary }}>Bit</Text>
-									<Text style={{ marginLeft: 5, color: theme.colors.primary }}>
-										10%
-									</Text>
-									<Pressable onPress={() => setIsSavePercentage(true)}>
-										<AntDesign
-											name="checkcircleo"
-											size={24}
-											color={isSavePercentage ? theme.colors.primary : 'white'}
-										/>
-									</Pressable>
-								</View>
-								<View></View>
+
+					<View style={styles.saveCard}>
+						<View style={{}}>
+							<Text style={styles.title}>Save a bit</Text>
+							<View style={{}}>
+								<Text>
+									Save <Text style={{ color: theme.colors.primary }}>10%</Text>{' '}
+									percent of amount spend
+								</Text>
+								<Text>
+									Would you like to save{' '}
+									<Text
+										style={{ color: theme.colors.primary, fontWeight: 'bold' }}
+									>
+										₦{calculatePercentage(data.amount)}
+									</Text>{' '}
+									of ₦{data.amount}
+								</Text>
 							</View>
 						</View>
-						<PrimaryButton onPress={handlePress} label="Confirm Transaction" />
+						<Pressable
+							onPress={() => setIsSavePercentage(!isSavePercentage)}
+							style={{ flexDirection: 'row', alignItems: 'center' }}
+						>
+							<AntDesign
+								name="checkcircle"
+								size={24}
+								color={isSavePercentage ? theme.colors.primary : 'gray'}
+							/>
+						</Pressable>
+					</View>
+					<View style={styles.saveContainer}>
+						<Text
+							style={{
+								fontSize: 16,
+								marginBottom: 10,
+								textAlign: 'center',
+								width: '100%',
+							}}
+						>
+							Enter your PIN to proceed
+						</Text>
+						<PrimaryButton onPress={handlePress} label="Confirm Transfer" />
 					</View>
 				</View>
 			</View>
@@ -83,16 +117,11 @@ const Index = ({
 	);
 };
 
-export default Index;
-
 const styles = StyleSheet.create({
 	overlay: {
-		backgroundColor: 'rgba(0,0,0,0.5)',
-		opacity: 0.8,
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
 		width: '100%',
+		backgroundColor: 'white',
 	},
 	card: {
 		backgroundColor: 'white',
@@ -100,16 +129,14 @@ const styles = StyleSheet.create({
 		padding: 16,
 	},
 	saveContainer: {
-		flex: 1,
-		backgroundColor: '#F5F5F5',
-		justifyContent: 'center',
-		alignItems: 'center',
-		padding: 20,
+		width: '100%',
+		padding: 10,
+		marginVertical: 10,
 	},
 	saveCard: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-around',
+		justifyContent: 'space-between',
 		marginTop: 20,
 		borderRadius: 8,
 		backgroundColor: 'white',
@@ -124,12 +151,14 @@ const styles = StyleSheet.create({
 		shadowRadius: 3.84,
 	},
 	title: {
-		// marginLeft: 8,
-		fontSize: 16,
+		paddingBottom: 8,
+		fontSize: 20,
 		color: '#333',
+		fontWeight: 'bold',
 	},
 	radioButton: {
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 });
+export default Index;

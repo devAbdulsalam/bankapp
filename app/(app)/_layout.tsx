@@ -90,6 +90,18 @@ export default function TabLayout() {
 					href: null,
 				}}
 			/>
+			<Tabs.Screen
+				name="rewards"
+				options={{
+					href: null,
+				}}
+			/>
+			<Tabs.Screen
+				name="customer-service"
+				options={{
+					href: null,
+				}}
+			/>
 		</Tabs>
 	);
 }

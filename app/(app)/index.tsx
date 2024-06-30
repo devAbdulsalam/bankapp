@@ -20,6 +20,7 @@ import { getIconComponent } from '@/hooks/getIcon';
 
 export default function HomeScreen() {
 	const theme = useTheme();
+	const newServices = [...services.slice(0, 5), services[services.length - 1]];
 
 	const { profile, token } = useAuth();
 	const renderItem = ({ item }: any) => {
@@ -89,7 +90,7 @@ export default function HomeScreen() {
 							<View style={styles.sectionHeaderContainer}>
 								<Text style={styles.sectionHeader}>Services</Text>
 								<FlatList
-									data={services}
+									data={newServices}
 									numColumns={3}
 									columnWrapperStyle={{
 										justifyContent: 'space-between',
@@ -107,8 +108,8 @@ export default function HomeScreen() {
 										paddingVertical: 5,
 									}}
 								>
-									<Text style={styles.sectionHeader}>Latest Transactions</Text>
-									<Text style={styles.transactionText}>See All</Text>
+									<Text style={styles.sectionHeader}>Latest transactions</Text>
+									<Text style={styles.transactionText}>See all</Text>
 								</View>
 							</View>
 						</>
@@ -189,11 +190,17 @@ const styles = StyleSheet.create({
 		marginVertical: 10,
 		borderRadius: 10,
 		backgroundColor: 'white',
-		shadowColor: 'white',
-		shadowOpacity: 0.2,
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignItems: 'center',
+		shadowColor: 'grey',
+		elevation: 2,
+		shadowOpacity: 0.8,
+		shadowRadius: 10,
+		shadowOffset: {
+			width: 0,
+			height: 20,
+		},
 	},
 	serviceText: {
 		fontSize: 18,
@@ -202,5 +209,6 @@ const styles = StyleSheet.create({
 	},
 	transactionText: {
 		fontSize: 16,
+		fontWeight: 'bold',
 	},
 });

@@ -53,7 +53,7 @@ const notifications = () => {
 			{/* <View style={styles.container}> */}
 			<FlatList
 				// ListHeaderComponent={}
-				data={transactions}
+				data={data}
 				renderItem={renderItem}
 				ListEmptyComponent={() => (
 					<View>

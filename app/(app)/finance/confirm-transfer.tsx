@@ -1,5 +1,12 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import React, { useState } from 'react';
+import {
+	Pressable,
+	StyleSheet,
+	Image,
+	Text,
+	TextInput,
+	View,
+} from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
 import PrimaryButton from '@/components/PrimaryButton';
 import Header from '@/components/Header';
 import axios from 'axios';
@@ -11,6 +18,7 @@ import { useAuth } from '@/context/authContext';
 import { useTheme } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { AntDesign } from '@expo/vector-icons';
+import { getAxiosError } from '@/hooks/getError';
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 const confirm = () => {
@@ -23,11 +31,33 @@ const confirm = () => {
 	const [isSavePercentage, setIsSavePercentage] = useState(false);
 	const [pin, setPin] = useState('');
 	const [isEnterPin, setIsEnterPin] = useState(false);
+	const [isAmountCorrect, setIsAmountCorrect] = useState(false);
 	const [isConfirmModal, setIsConfirmModal] = useState(false);
-	const { accountName, accountNumber, bank } = useLocalSearchParams();
+	const { accountName, accountNumber, bankCode, bankName, bankImage } =
+		useLocalSearchParams();
 	const params = useLocalSearchParams();
 
 	const balance = '3000';
+	const date = new Date();
+
+	const checkAccount = useCallback(async () => {
+		// return if amount is greather than 10 naira
+		if (!amount || +amount <= 10) {
+			setIsAmountCorrect(false);
+			return;
+		}
+		if (+amount <= +balance) {
+			setIsAmountCorrect(true);
+			return;
+		} else {
+			setIsAmountCorrect(false);
+			return;
+		}
+	}, [amount, balance]);
+
+	useEffect(() => {
+		checkAccount();
+	}, [amount, balance]);
 
 	const handleShowConfirmModal = async () => {
 		if (+amount <= 10) {
@@ -39,52 +69,54 @@ const confirm = () => {
 			return;
 		}
 		setIsError('');
-		setIsEnterPin(true);
+		setIsConfirmModal(true);
 	};
 	const handleShowEnterPinModal = async () => {
-		setIsConfirmModal(false);
 		setIsEnterPin(true);
+		setIsConfirmModal(false);
 	};
 	const handleTransfer = async () => {
-		if (+amount <= 10) {
-			setIsError('Amount should be greater than 10');
-			return;
+		try {
+			if (+amount <= 10) {
+				setIsError('Amount should be greater than 10');
+				return;
+			}
+			if (+amount > +balance) {
+				setIsError('Account balance is not sufficient');
+				return;
+			}
+			setIsLoading(true);
+			setIsEnterPin(false);
+			setIsError('');
+			const data = {
+				accountName,
+				accountNumber,
+				bankCode,
+				amount,
+				remark,
+				pin,
+				isSavePercentage,
+			};
+			// axios
+			// 	.post(`${apiUrl}/transfer`, data)
+			// 	.then((response) => {
+			// 		if (response.status === 200) {
+			// 			console.log(response.data);
+			setAmount('');
+			setRemark('');
+			setIsLoading(false);
+			router.navigate({
+				pathname: '/finance/receipt',
+				params: { ...params, amount, date: date.toDateString() },
+			});
+			// }
+			// })
+		} catch (error) {
+			console.log(error);
+			setIsLoading(false);
+			const message = getAxiosError(error);
+			setIsError(message);
 		}
-		if (+amount > +balance) {
-			setIsError('Account balance is not sufficient');
-			return;
-		}
-		setIsLoading(true);
-		setIsEnterPin(false);
-		setIsError('');
-		const data = {
-			accountName,
-			accountNumber,
-			bank,
-			amount,
-			remark,
-			pin,
-			isSavePercentage,
-		};
-		axios
-			.post(`${apiUrl}/transfer`, data)
-			.then((response) => {
-				if (response.status === 200) {
-					console.log(response.data);
-					alert('Transfer Successful');
-					setAmount('');
-					setRemark('');
-					router.navigate({
-						pathname: '/finance/receipt',
-						params: { ...params, amount },
-					});
-				}
-			})
-			.catch((error) => {
-				console.log(error);
-				setIsError('Something went wrong');
-			})
-			.finally(() => setIsLoading(false));
 	};
 
 	return (
@@ -95,8 +127,44 @@ const confirm = () => {
 				<View>
 					<Header title="Send money" onPress={() => router.back()} />
 					<View style={styles.container}>
-						<Text>Account Name: {accountName}</Text>
-						<Text>Account Number: {accountNumber}</Text>
+						<View
+							style={{
+								justifyContent: 'space-between',
+								flexDirection: 'row',
+								alignItems: 'center',
+							}}
+						>
+							<View
+								style={{
+									padding: 10,
+								}}
+							>
+								<Image
+									source={{
+										uri:
+											bankImage ||
+											`https://ui-avatars.com/api/?name=${bankImage}`,
+									}}
+									style={{
+										height: 48,
+										width: 48,
+										borderRadius: 24,
+										borderWidth: 1,
+										// borderColor: COLORS.secondary,
+									}}
+								/>
+							</View>
+							<View style={{ marginLeft: 2 }}>
+								<Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+									Account Name: {accountName}
+								</Text>
+								<Text
+									style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}
+								>
+									Bank: {bankName}({accountNumber})
+								</Text>
+							</View>
+						</View>
 						<View style={styles.inputContainer}>
 							<Text style={styles.label}>Amount</Text>
 							<TextInput
@@ -107,8 +175,12 @@ const confirm = () => {
 								keyboardType="numeric"
 							/>
 						</View>
-
-						<Text>Balance: N {balance}</Text>
+						<View style={{ justifyContent: 'center' }}>
+							<Text style={{ color: theme.colors.text, fontWeight: '600' }}>
+								Balance: ₦<Text style={{ color: 'green' }}>{balance}</Text>
+							</Text>
+							{isError && <Text style={styles.errorText}>{isError}</Text>}
+						</View>
 					</View>
 					<View style={styles.inputContainer}>
 						<Text style={styles.label}>Remark</Text>
@@ -122,8 +194,13 @@ const confirm = () => {
 					</View>
 					<View style={styles.saveContainer}>
 						<PrimaryButton
-							label="Trasfer now"
-							onPress={handleShowConfirmModal}
+							label="Transfer now"
+							onPress={!isAmountCorrect ? () => {} : handleShowConfirmModal}
+							style={{
+								backgroundColor: !isAmountCorrect
+									? '#D0D0D0'
+									: theme.colors.primary,
+							}}
 						/>
 					</View>
 					{isConfirmModal && (

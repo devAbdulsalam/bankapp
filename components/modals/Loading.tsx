@@ -3,7 +3,7 @@ import React from 'react';
 
 type ModalProps = {
 	isModal: boolean;
-	setIsModal: () => void;
+	setIsModal: (isModal) => void;
 };
 
 const LoadingModal = ({ isModal }: ModalProps) => {
@@ -28,7 +28,7 @@ export default LoadingModal;
 
 const styles = StyleSheet.create({
 	overlay: {
-		backgroundColor: 'rgba(0,0,0,0.5)',
+		backgroundColor: 'rgba(0,0,0,0,0.5)',
 		opacity: 0.8,
 		flex: 1,
 		justifyContent: 'center',

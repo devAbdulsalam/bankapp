@@ -12,7 +12,7 @@ import { useTheme } from '@react-navigation/native';
 import { useAuth } from '@/context/authContext';
 import { fetchBanks, verifyAccount } from '@/api';
 import PrimaryButton from '@/components/PrimaryButton';
-import Loader from '@/components/Loader';
+import Loader from '@/components/modals/Loading';
 import BankModal from '@/components/modals/BankModal';
 import Header from '@/components/Header';
 import { router } from 'expo-router';
@@ -81,6 +81,7 @@ const Transfer = () => {
 					accountNumber,
 					bankCode: selectedBank?.code,
 					bankName: selectedBank?.name,
+					bankImage: selectedBank?.logo,
 				},
 			});
 		} catch (error) {
@@ -92,7 +93,7 @@ const Transfer = () => {
 	return (
 		<>
 			{isLoading ? (
-				<Loader />
+				<Loader isModal={isLoading} setIsModal={setIsLoading} />
 			) : (
 				<View>
 					<Header title="Transfer Money" />

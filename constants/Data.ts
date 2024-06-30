@@ -43,18 +43,18 @@ export const accounts = [
 ];
 export const services = [
 	{
-		id: 1,
-		name: 'Deposits',
-		icon: 'money-bill-transfer',
-		iconType: 'FontAwesome6',
-		link: '/finance/deposits',
-	},
-	{
 		id: 4,
 		name: 'Transfer',
 		icon: 'send-o',
 		iconType: 'FontAwesome',
 		link: 'finance/transfer',
+	},
+	{
+		id: 1,
+		name: 'Deposits',
+		icon: 'money-bill-transfer',
+		iconType: 'FontAwesome6',
+		link: '/finance/deposits',
 	},
 	{
 		id: 3,
@@ -63,12 +63,20 @@ export const services = [
 		iconType: 'FontAwesome6',
 		link: '/finance/savings',
 	},
+
 	{
-		id: 4,
-		name: 'Transfer',
+		id: 9,
+		name: 'Expense',
 		icon: 'arrow-right-arrow-left',
 		iconType: 'FontAwesome6',
-		link: '/finance/transfer',
+		link: '/services',
+	},
+	{
+		id: 4,
+		name: 'Rewards',
+		icon: 'hand-coin-outline',
+		iconType: 'MaterialCommunityIcons',
+		link: '/rewards',
 	},
 	{
 		id: 5,
@@ -79,6 +87,27 @@ export const services = [
 	},
 	{
 		id: 6,
+		name: 'Receipt',
+		icon: 'more-horizontal',
+		iconType: 'Feather',
+		link: '/finance/receipt',
+	},
+	{
+		id: 7,
+		name: 'Reminder',
+		icon: 'alarm',
+		iconType: 'MaterialIcons',
+		link: '/services',
+	},
+	{
+		id: 8,
+		name: 'Savings Planner',
+		icon: 'dotchart',
+		iconType: 'AntDesign',
+		link: '/services',
+	},
+	{
+		id: 10,
 		name: 'More',
 		icon: 'more-horizontal',
 		iconType: 'Feather',
@@ -90,9 +119,9 @@ export const settingData = [
 	{
 		id: 1,
 		name: 'Avatar',
-		icon: 'user',
+		icon: 'user-circle',
 		link: '/account/avatar',
-		iconType: 'EvilIcons',
+		iconType: 'FontAwesome5',
 	},
 	{
 		id: 2,
@@ -117,20 +146,34 @@ export const settingData = [
 	},
 	{
 		id: 5,
-		name: 'Privacy policy',
-		icon: 'privacy-tip',
+		name: 'Payment',
+		icon: 'wallet',
 		link: 'account',
-		iconType: 'MaterialIcons',
+		iconType: 'AntDesign',
 	},
 	{
 		id: 6,
+		name: 'Security',
+		icon: 'lock',
+		link: 'account',
+		iconType: 'AntDesign',
+	},
+	{
+		id: 7,
+		name: 'Privacy policy',
+		icon: 'shield-alert-outline',
+		link: 'account',
+		iconType: 'MaterialCommunityIcons',
+	},
+	{
+		id: 8,
 		name: 'Terms and condition',
 		icon: 'list-alt',
 		link: 'account',
 		iconType: 'FontAwesome5',
 	},
 	{
-		id: 7,
+		id: 9,
 		name: 'Customer support',
 		icon: 'headset',
 		link: 'account',
@@ -138,11 +181,25 @@ export const settingData = [
 	},
 ];
 export const transactions = [
-	{ id: 1, name: 'Airtime', amount: '5000', type: 'Deposit', description: '' },
+	{
+		id: 1,
+		name: 'Airtime',
+		amount: '5000',
+		type: 'Deposit',
+		description: '',
+		logo: 'https://nigerianbanks.xyz/logo/access-bank-diamond.png',
+	},
 	{ id: 2, name: 'Bill', amount: '5000', type: 'Transfer', description: '' },
 	{ id: 3, name: 'Current', amount: '5000', type: 'Transfer', description: '' },
 	{ id: 4, name: 'Airtime', amount: '5000', type: 'Deposit', description: '' },
-	{ id: 5, name: 'Current', amount: '5000', type: 'Transfer', description: '' },
+	{
+		id: 5,
+		name: 'Current',
+		amount: '5000',
+		type: 'Transfer',
+		description: '',
+		logo: 'https://nigerianbanks.xyz/logo/access-bank-diamond.png',
+	},
 	{ id: 6, name: 'Airtime', amount: '5000', type: 'Deposit', description: '' },
 	{ id: 7, name: 'Current', amount: '5000', type: 'Transfer', description: '' },
 	{ id: 8, name: 'Airtime', amount: '5000', type: 'Deposit', description: '' },

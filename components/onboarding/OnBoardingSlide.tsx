@@ -39,13 +39,13 @@ const styles = StyleSheet.create({
 	image: {
 		flex: 0.7,
 		justifyContent: 'center',
-		color: 'green',
+		color: 'blue',
 	},
 	title: {
 		fontWeight: '800',
 		fontSize: 28,
 		marginBottom: 10,
-		color: 'green',
+		color: 'blue',
 		textAlign: 'center',
 	},
 	desription: {

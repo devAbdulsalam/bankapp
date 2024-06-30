@@ -37,7 +37,7 @@ const Balance = ({ data }: any) => {
 					>
 						<Text style={styles.balanceText}>
 							Total Balance:
-							<Text style={styles.balanceAmount}> ${item.balance}</Text>
+							<Text style={styles.balanceAmount}> ₦{item.balance}</Text>
 						</Text>
 						<View>
 							<View>
@@ -66,8 +66,6 @@ const Balance = ({ data }: any) => {
 	);
 };
 
-export default Balance;
-
 const styles = StyleSheet.create({
 	headerContainer: {
 		marginTop: 10,
@@ -82,8 +80,15 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		paddingHorizontal: 18,
 		paddingVertical: 16,
-		shadowColor: 'white',
 		backgroundColor: 'blue',
+		shadowColor: 'blue',
+		elevation: 5,
+		shadowOpacity: 0.8,
+		shadowRadius: 10,
+		shadowOffset: {
+			width: 0,
+			height: 20,
+		},
 	},
 	balanceText: {
 		color: 'white',
@@ -99,3 +104,5 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 });
+export default Balance;
+

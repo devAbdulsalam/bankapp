@@ -15,7 +15,7 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import Icons from '@expo/vector-icons/MaterialIcons';
-import { Svg01 } from '@/components/svgIcons';
+import  Svg01 from '@/components/svgIcons';
 import { FORGOT_PASSWORD_SCREEN } from '@/constants/Data';
 import PrimaryButton from '@/components/PrimaryButton';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -52,7 +52,7 @@ const ForgotPasswordScreen = () => {
 				console.log(data);
 				clearData();
 			}
-			// router.push('/update-password')
+			router.push('/update-password')
 			setIsLoading(false);
 		} catch (error) {
 			console.warn('Error', '@post forgot password', error);

@@ -6,6 +6,16 @@
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
+
+// lineargradient #EE4F43 #FEBE72
+// primary #007BFF
+// #80BDFF
+// #AAD3FF
+// #007BFF
+// #51A3FB
+// green #0EE195
+// green #4CAF50
+
 export const Colors = {
   light: {
     text: '#11181C',
