@@ -1,10 +1,4 @@
-import {
-	Modal,
-	StyleSheet,
-	Text,
-	Alert,
-	View,
-} from 'react-native';
+import { Modal, StyleSheet, Text, Alert, View } from 'react-native';
 import React from 'react';
 import PrimaryButton from '../PrimaryButton';
 import OtpInput from 'react-native-animated-otp-input';
@@ -59,7 +53,9 @@ const LoadingModal = ({
 		>
 			<View style={styles.overlay}>
 				<Header title="Enter Pin" onPress={() => setIsModal(false)} />
-				<View style={{ backgroundColor: theme.colors.background }}>
+				<View
+					style={{ backgroundColor: theme.colors.background, paddingTop: 30 }}
+				>
 					<View style={styles.card}>
 						<OtpInput
 							otpCount={4}

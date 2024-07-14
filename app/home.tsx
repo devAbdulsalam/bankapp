@@ -54,7 +54,7 @@ const index = () => {
 			{isLoading ? (
 				<Loader />
 			) : (
-				<SafeAreaView style={{ backgroundColor: theme.colors.card, flex: 1 }}>
+				// <SafeAreaView style={{ backgroundColor: theme.colors.card, flex: 1 }}>
 					<LinearGradient
 						colors={['lightblue', '#fffad0c4', 'white', 'lightblue']}
 						// colors={['lightblue', 'blue', 'white', '#ffff9a9e', '#fffad0c4']}
@@ -87,7 +87,7 @@ const index = () => {
 							/>
 						</View>
 					</LinearGradient>
-				</SafeAreaView>
+				// </SafeAreaView>
 			)}
 		</>
 	);

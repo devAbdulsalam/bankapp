@@ -40,7 +40,9 @@ const Index = ({
 							flexDirection: 'row',
 							alignItems: 'center',
 							justifyContent: 'center',
-							marginVertical: 20,
+							marginTop: 40,
+							marginBottom: 20,
+							...styles.shadow,
 						}}
 					>
 						<Image
@@ -141,6 +143,16 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		backgroundColor: 'white',
 		padding: 16,
+		elevation: 4,
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+	},
+	shadow: {
 		elevation: 4,
 		shadowColor: '#000',
 		shadowOffset: {

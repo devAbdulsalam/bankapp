@@ -1,6 +1,7 @@
-import { Colors } from '@/constants/Colors';
+import React from 'react';
+// import { Colors } from '@/constants/Colors';
 import { accounts, transactions, services } from '@/constants/Data';
-import { FontAwesome, FontAwesome6, Feather } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import {
 	Image,
 	StyleSheet,
@@ -9,6 +10,7 @@ import {
 	Text,
 	FlatList,
 	Pressable,
+	TouchableOpacity,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Link, router } from 'expo-router';
@@ -26,28 +28,38 @@ export default function HomeScreen() {
 	const renderItem = ({ item }: any) => {
 		const IconComponent = getIconComponent(item.iconType);
 		return (
-			<Pressable
+			<TouchableOpacity
 				onPress={() => router.navigate(`${item.link}`)}
 				key={item.id}
 				style={styles.serviceItem}
 			>
-				{item.iconType === 'Feather ' ? (
-					<IconComponent
-						name={item.icon}
-						size={26}
-						color={theme.colors.primary}
-					/>
-				) : (
-					<IconComponent
-						name={item.icon}
-						size={24}
-						color={theme.colors.primary}
-					/>
-				)}
-				<Text style={{ ...styles.serviceText, color: theme.colors.primary }}>
-					{item.name}
-				</Text>
-			</Pressable>
+				<View
+					style={{
+						height: 50,
+						width: 50,
+						marginBottom: 5,
+						borderRadius: 20,
+						backgroundColor: item.backgroundColor,
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+				>
+					{item.iconType === 'Feather ' ? (
+						<IconComponent
+							name={item.icon}
+							size={26}
+							color={item.color || theme.colors.primary}
+						/>
+					) : (
+						<IconComponent
+							name={item.icon}
+							size={24}
+							color={item.color || theme.colors.primary}
+						/>
+					)}
+				</View>
+				<Text style={{ ...styles.serviceText }}>{item.name}</Text>
+			</TouchableOpacity>
 		);
 	};
 
@@ -71,7 +83,8 @@ export default function HomeScreen() {
 							width: 48,
 							borderRadius: 24,
 							borderWidth: 1,
-							// borderColor: COLORS.secondary,
+							// borderColor: theme.colors.secondary,
+							// tintColor: theme.colors.primary,
 						}}
 					/>
 				</Pressable>
@@ -186,26 +199,26 @@ const styles = StyleSheet.create({
 	},
 	serviceItem: {
 		flex: 1,
-		padding: 14,
+		padding: 5,
 		marginVertical: 10,
 		borderRadius: 10,
-		backgroundColor: 'white',
+		// backgroundColor: 'white',
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignItems: 'center',
-		shadowColor: 'grey',
-		elevation: 2,
-		shadowOpacity: 0.8,
-		shadowRadius: 10,
-		shadowOffset: {
-			width: 0,
-			height: 20,
-		},
+		// shadowColor: 'white',
+		// elevation: 1,
+		// shadowOpacity: 0.5,
+		// shadowRadius: 4,
+		// shadowOffset: {
+		// 	width: 0,
+		// 	height: 2,
+		// },
 	},
 	serviceText: {
 		fontSize: 18,
 		fontWeight: 'bold',
-		marginTop: 10,
+		marginTop: 4,
 	},
 	transactionText: {
 		fontSize: 16,

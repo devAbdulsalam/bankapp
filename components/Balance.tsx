@@ -5,12 +5,15 @@ import {
 	FlatList,
 	Animated,
 	useWindowDimensions,
+	TouchableOpacity,
 } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import { useTheme } from '@react-navigation/native';
 
 const Balance = ({ data }: any) => {
 	const [currentIndex, setCurrentIndex] = useState(0);
+	const [showBal, setShowBal] = useState<boolean>(false);
 	const scrollX = useRef(new Animated.Value(0)).current;
 	const slidesRef = useRef(null);
 	const viewableItemsChange = useRef(({ viewableItems }: any) => {
@@ -35,11 +38,34 @@ const Balance = ({ data }: any) => {
 							{ width: cardWidth, backgroundColor: theme.colors.primary },
 						]}
 					>
+						<View
+							style={{
+								flexDirection: 'row',
+								justifyContent: 'flex-start',
+								alignItems: 'center',
+								gap: 2,
+							}}
+						>
+							<Text style={styles.eyeText}>Available Balance</Text>
+							<TouchableOpacity
+								style={styles.eyes}
+								onPress={() => setShowBal(!showBal)}
+							>
+								{!showBal ? (
+									<FontAwesome name="eye" size={20} color="white" />
+								) : (
+									<FontAwesome name="eye-slash" size={20} color="white" />
+								)}
+							</TouchableOpacity>
+						</View>
 						<Text style={styles.balanceText}>
-							Total Balance:
-							<Text style={styles.balanceAmount}> ₦{item.balance}</Text>
+							{!showBal ? (
+								<Text style={styles.balanceAmount}>₦{item.balance}</Text>
+							) : (
+								<Text style={styles.balanceAmount}>₦ *****</Text>
+							)}
 						</Text>
-						<View>
+						<View style={styles.textcard}>
 							<View>
 								<Text style={styles.AccountText}>{item.name} account</Text>
 								<Text style={styles.AccountText}>A/c no {item.number}</Text>
@@ -92,17 +118,30 @@ const styles = StyleSheet.create({
 	},
 	balanceText: {
 		color: 'white',
-		fontSize: 20,
-		marginVertical: 12,
+		fontSize: 24,
+		marginTop: 8,
+		marginBottom: 12,
 	},
 	balanceAmount: {
 		color: 'white',
-		fontSize: 22,
+		fontSize: 26,
+		fontWeight: 'condensedBold',
+	},
+	eyeText: {
+		color: 'white',
+		fontSize: 18,
 		fontWeight: 'bold',
+	},
+	eyes: {
+		color: 'white',
+		marginLeft: 5,
+		height: '100%',
+	},
+	textcard: {
+		marginTop: 20,
 	},
 	AccountText: {
 		color: 'white',
 	},
 });
 export default Balance;
-

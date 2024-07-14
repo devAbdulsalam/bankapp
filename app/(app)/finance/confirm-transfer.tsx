@@ -156,8 +156,15 @@ const confirm = () => {
 							</View>
 							<View style={{ marginLeft: 2 }}>
 								<Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-									Account Name: {accountName}
+									Account Name: {accountName?.length < 14 && accountName}
 								</Text>
+								{accountName?.length >= 14 && (
+									<Text
+										style={{ fontSize: 18, fontWeight: 'bold', marginTop: 2 }}
+									>
+										{accountName}
+									</Text>
+								)}
 								<Text
 									style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}
 								>
@@ -181,16 +188,16 @@ const confirm = () => {
 							</Text>
 							{isError && <Text style={styles.errorText}>{isError}</Text>}
 						</View>
-					</View>
-					<View style={styles.inputContainer}>
-						<Text style={styles.label}>Remark</Text>
-						<TextInput
-							placeholder="Your Remark"
-							style={styles.input}
-							value={remark}
-							multiline
-							onChangeText={setRemark}
-						/>
+						<View style={[styles.inputContainer, { paddingHorizontal: 5 }]}>
+							<Text style={styles.label}>Remark</Text>
+							<TextInput
+								placeholder="Your Remark"
+								style={styles.input}
+								value={remark}
+								multiline
+								onChangeText={setRemark}
+							/>
+						</View>
 					</View>
 					<View style={styles.saveContainer}>
 						<PrimaryButton
@@ -230,7 +237,7 @@ const confirm = () => {
 
 const styles = StyleSheet.create({
 	container: {
-		padding: 10,
+		padding: 14,
 	},
 	inputContainer: {
 		marginBottom: 5,

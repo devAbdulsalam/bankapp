@@ -31,7 +31,7 @@ export default function TabLayout() {
 			<Tabs.Screen
 				name="explore"
 				options={{
-					title: 'Explore',
+					title: 'Savings',
 					tabBarIcon: ({ color, focused }) => (
 						<FontAwesome6
 							name={focused ? 'sack-dollar' : 'sack-dollar'}

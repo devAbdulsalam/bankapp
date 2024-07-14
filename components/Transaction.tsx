@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		borderRadius: 8,
-		backgroundColor: 'white',
+		// backgroundColor: 'white',
 		shadowColor: 'white',
 		elevation: 5,
 		shadowOpacity: 0.8,

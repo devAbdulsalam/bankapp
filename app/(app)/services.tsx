@@ -18,19 +18,31 @@ const servicePage = () => {
 				key={item.id}
 				style={styles.serviceItem}
 			>
-				{item.iconType === 'Feather ' ? (
-					<IconComponent
-						name={item.icon}
-						size={26}
-						color={theme.colors.primary}
-					/>
-				) : (
-					<IconComponent
-						name={item.icon}
-						size={24}
-						color={theme.colors.primary}
-					/>
-				)}
+				<View
+					style={{
+						height: 50,
+						width: 50,
+						marginBottom: 5,
+						borderRadius: 20,
+						backgroundColor: item.backgroundColor,
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+				>
+					{item.iconType === 'Feather ' ? (
+						<IconComponent
+							name={item.icon}
+							size={26}
+							color={item.color || theme.colors.primary}
+						/>
+					) : (
+						<IconComponent
+							name={item.icon}
+							size={24}
+							color={item.color || theme.colors.primary}
+						/>
+					)}
+				</View>
 				<Text style={{ ...styles.serviceText, color: theme.colors.primary }}>
 					{item.name}
 				</Text>
@@ -51,7 +63,7 @@ const servicePage = () => {
 					}}
 					keyExtractor={(item) => `${item.id}`}
 					renderItem={renderItem}
-					style={{ marginTop: 12 }}
+					style={{ marginTop: 6 }}
 				/>
 			</View>
 		</View>

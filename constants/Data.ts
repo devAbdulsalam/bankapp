@@ -1,4 +1,5 @@
 import images from '@/constants/Images';
+import { COLORS } from '@/constants/Colors';
 export const onBoardingData = [
 	{
 		id: 1,
@@ -41,27 +42,44 @@ export const accounts = [
 	{ id: 1, name: 'Current', balance: '5000', number: '1424154545' },
 	{ id: 2, name: 'Savings', balance: '2000', number: '1424154546' },
 ];
+
+export const savingsData = [
+	{ id: 1, name: 'Automatic Savings', balance: '5000', number: '1424154545' },
+	{ id: 2, name: 'Locked Savings', balance: '2000', number: '1424154546' },
+	{ id: 3, name: 'Fixed Savings', balance: '2000', number: '1424154546' },
+	{ id: 4, name: 'Savings Goals', balance: '2000', number: '1424154546' },
+	{ id: 5, name: 'Fixed Savings', balance: '2000', number: '1424154546' },
+	{ id: 6, name: 'Budget', balance: '2000', number: '1424154546' },
+];
+
 export const services = [
+	{
+		id: 1,
+		name: 'Deposits',
+		icon: 'money-bill-transfer',
+		iconType: 'FontAwesome6',
+		link: '/finance/deposite',
+		color: COLORS.yellow,
+		backgroundColor: COLORS.lightyellow,
+	},
 	{
 		id: 4,
 		name: 'Transfer',
 		icon: 'send-o',
 		iconType: 'FontAwesome',
 		link: 'finance/transfer',
+		color: COLORS.purple,
+		backgroundColor: COLORS.lightpurple,
 	},
-	{
-		id: 1,
-		name: 'Deposits',
-		icon: 'money-bill-transfer',
-		iconType: 'FontAwesome6',
-		link: '/finance/deposits',
-	},
+
 	{
 		id: 3,
-		name: 'Savings',
+		name: 'My Savings',
 		icon: 'sack-dollar',
 		iconType: 'FontAwesome6',
 		link: '/finance/savings',
+		color: COLORS.primary,
+		backgroundColor: COLORS.lightGreen,
 	},
 
 	{
@@ -70,12 +88,16 @@ export const services = [
 		icon: 'arrow-right-arrow-left',
 		iconType: 'FontAwesome6',
 		link: '/services',
+		color: COLORS.red,
+		backgroundColor: COLORS.lightRed,
 	},
 	{
 		id: 4,
 		name: 'Rewards',
 		icon: 'hand-coin-outline',
 		iconType: 'MaterialCommunityIcons',
+		color: COLORS.yellow,
+		backgroundColor: COLORS.lightyellow,
 		link: '/rewards',
 	},
 	{
@@ -84,6 +106,8 @@ export const services = [
 		icon: 'list',
 		iconType: 'FontAwesome',
 		link: '/(app)/transactions',
+		color: COLORS.purple,
+		backgroundColor: COLORS.lightpurple,
 	},
 	{
 		id: 6,
@@ -91,6 +115,8 @@ export const services = [
 		icon: 'more-horizontal',
 		iconType: 'Feather',
 		link: '/finance/receipt',
+		color: COLORS.red,
+		backgroundColor: COLORS.lightRed,
 	},
 	{
 		id: 7,
@@ -98,6 +124,8 @@ export const services = [
 		icon: 'alarm',
 		iconType: 'MaterialIcons',
 		link: '/services',
+		color: COLORS.primary,
+		backgroundColor: COLORS.lightGreen,
 	},
 	{
 		id: 8,
@@ -105,6 +133,8 @@ export const services = [
 		icon: 'dotchart',
 		iconType: 'AntDesign',
 		link: '/services',
+		color: COLORS.yellow,
+		backgroundColor: COLORS.lightyellow,
 	},
 	{
 		id: 10,
@@ -112,6 +142,9 @@ export const services = [
 		icon: 'more-horizontal',
 		iconType: 'Feather',
 		link: '/services',
+
+		color: COLORS.purple,
+		backgroundColor: COLORS.lightpurple,
 	},
 ];
 
